@@ -1,3 +1,5 @@
+# PyPy3でないと通らない
+
 import sys
 from collections import deque
 
