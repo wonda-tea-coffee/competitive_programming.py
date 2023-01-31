@@ -21,12 +21,12 @@ for i in range(H):
             ay, ax = i, j
 
 def valtoidx(a, b, c, d):
-    return a*M3 + b*M2 + c*M + d
+    return a * 51 * 51 * 51 + b * 51 * 51 + c * 51 + d
 
 def idxtoval(idx):
-    idx1 = idx//M2
-    idx2 = idx%M2
-    return idx1//M, idx1%M, idx2//M, idx2%M
+    i1 = idx // (51 * 51)
+    i2 = idx % (51 * 51)
+    return i1 // 51, i1 % 51, i2 // 51, i2 % 51
 
 sval = valtoidx(sy, sx, ay, ax)
 dist[sval] = 0
