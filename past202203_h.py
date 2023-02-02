@@ -1,4 +1,7 @@
+import sys
 from collections import deque
+
+input = lambda: sys.stdin.readline().rstrip()
 
 class UnionFind:
     def __init__(self, n):
