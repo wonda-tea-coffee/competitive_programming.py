@@ -1,0 +1,1 @@
+print("".join(list(map(lambda x: chr(ord("a")-1+int(x)), input().split()))))
