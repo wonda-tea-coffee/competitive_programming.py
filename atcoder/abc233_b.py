@@ -1,0 +1,5 @@
+L, R = map(lambda x: int(x)-1, input().split())
+S = input()
+rev = list(S[L:R+1])
+rev.reverse()
+print(S[:L] + "".join(rev) + S[R+1:])
