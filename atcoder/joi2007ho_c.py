@@ -1,17 +1,15 @@
-def main():
-    N = int(input())
-    P = [tuple(map(int, input().split())) for _ in range(N)]
-    S = set(P)
+from itertools import combinations
 
-    ans = 0
-    for i, (x1, y1) in enumerate(P):
-        for x2, y2 in P[i+1:]:
-            dx = x2-x1
-            dy = y2-y1
-            if (x1+dy, y1-dx) in S and (x2+dy, y2-dx) in S or (x1-dy, y1+dx) in S and (x2-dy, y2+dx) in S:
-                ans = max(ans, dx**2 + dy**2)
+N = int(input())
+L = set([tuple(map(int, input().split())) for _ in range(N)])
 
-    print(ans)
+ans = 0
+for p1, p2 in combinations(L, 2):
+    dx = p2[0] - p1[0]
+    dy = p2[1] - p1[1]
+    p3 = (p1[0] + dy, p1[1] - dx)
+    p4 = (p2[0] + dy, p2[1] - dx)
+    if p3 in L and p4 in L:
+        ans = max(ans, dx*dx + dy*dy)
 
-if __name__ == '__main__':
-    main()
+print(ans)
