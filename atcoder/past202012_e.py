@@ -24,6 +24,7 @@ def shrink(hanko):
         newhanko.append(s)
     return newhanko
 
+# ハンコを右に90度回す
 def rotate(hanko):
     newhanko = []
     height = len(hanko)
