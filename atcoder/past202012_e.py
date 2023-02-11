@@ -37,20 +37,21 @@ def rotate(hanko):
     return newhanko
 
 def search(hanko, dodai):
-    dx = len(dodai) - len(hanko)
-    dy = len(dodai[0]) - len(hanko[0])
-    for x in range(dx+1):
-        for y in range(dy+1):
-            if (stamp(hanko, dodai, x, y)):
+    dy = len(dodai) - len(hanko)
+    dx = len(dodai[0]) - len(hanko[0])
+    for y in range(dy+1):
+        for x in range(dx+1):
+            if stamp(hanko, dodai, y, x):
                 return True
     return False
 
-def stamp(hanko, dodai, xpos, ypos):
-    for x in range(len(hanko)):
-        for y in range(len(hanko[0])):
-            c1 = hanko[x][y]
-            c2 = dodai[x+xpos][y+ypos]
-            if (c1 == '#' and c2 == '#'):
+# 土台の左上隅を決めてハンコを押せるかチェック
+def stamp(hanko, dodai, ypos, xpos):
+    for y in range(len(hanko)):
+        for x in range(len(hanko[0])):
+            c1 = hanko[y][x]
+            c2 = dodai[y+ypos][x+xpos]
+            if c1 == '#' and c2 == '#':
                 return False
     return True
 
@@ -61,4 +62,5 @@ for _ in range(4):
         print("Yes")
         exit()
     hanko = rotate(hanko)
+
 print("No")
