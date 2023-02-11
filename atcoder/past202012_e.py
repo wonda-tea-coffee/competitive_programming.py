@@ -16,9 +16,9 @@ def shrink(hanko):
                 if (xmin > x): xmin = x
                 if (ymax < y): ymax = y
                 if (ymin > y): ymin = y
- 
+
     for x in range(xmin, xmax+1):
-        s = '';
+        s = ''
         for y in range(ymin, ymax+1):
             s += hanko[x][y]
         newhanko.append(s)
