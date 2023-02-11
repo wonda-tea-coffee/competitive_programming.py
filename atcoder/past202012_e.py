@@ -9,18 +9,18 @@ def shrink(hanko):
     xmin = 99
     ymax = 0
     ymin = 99
-    for x in range(H):
-        for y in range(W):
-            if (hanko[x][y] == '#'):
+    for y in range(H):
+        for x in range(W):
+            if (hanko[y][x] == '#'):
                 if (xmax < x): xmax = x
                 if (xmin > x): xmin = x
                 if (ymax < y): ymax = y
                 if (ymin > y): ymin = y
 
-    for x in range(xmin, xmax+1):
+    for y in range(ymin, ymax+1):
         s = ''
-        for y in range(ymin, ymax+1):
-            s += hanko[x][y]
+        for x in range(xmin, xmax+1):
+            s += hanko[y][x]
         newhanko.append(s)
     return newhanko
 
