@@ -28,10 +28,10 @@ def rotate(hanko):
     newhanko = []
     height = len(hanko)
     width = len(hanko[0])
-    for y in range(height):
+    for y in range(width):
         s = ''
-        for x in range(width):
-            s = hanko[y][x] + s
+        for x in range(height):
+            s = hanko[x][y] + s
         newhanko.append(s)
     return newhanko
 
