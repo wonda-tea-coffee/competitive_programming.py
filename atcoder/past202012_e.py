@@ -9,16 +9,16 @@ def shrink(hanko):
     xmin = 99
     ymax = 0
     ymin = 99
-    for y in range(H):
-        for x in range(W):
-            if hanko[y][x] == '#':
+    for x in range(H):
+        for y in range(W):
+            if (hanko[x][y] == '#'):
                 if (xmax < x): xmax = x
                 if (xmin > x): xmin = x
                 if (ymax < y): ymax = y
                 if (ymin > y): ymin = y
-
+ 
     for x in range(xmin, xmax+1):
-        s = ''
+        s = '';
         for y in range(ymin, ymax+1):
             s += hanko[x][y]
         newhanko.append(s)
@@ -28,10 +28,10 @@ def rotate(hanko):
     newhanko = []
     height = len(hanko)
     width = len(hanko[0])
-    for y in range(width):
+    for x in range(width):
         s = ''
-        for x in range(height):
-            s = hanko[x][y] + s
+        for y in range(height):
+            s = hanko[y][x] + s
         newhanko.append(s)
     return newhanko
 
@@ -53,9 +53,15 @@ def stamp(hanko, dodai, xpos, ypos):
                 return False
     return True
 
+print("init:", hanko)
+
 hanko = shrink(hanko)
 
+print("shrink:", hanko)
+
 for _ in range(4):
+    print("rotate:", hanko)
+
     if search(hanko, dodai):
         print("Yes")
         exit()
