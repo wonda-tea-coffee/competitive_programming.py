@@ -1,8 +1,8 @@
 import heapq
 
-N, M, Q = map(int, input().split())
+N, M, _ = map(int, input().split())
 A, B, C = zip(*[map(int, input().split()) for _ in range(M)])
-X = [*map(int, input().split())]
+X = list(map(int, input().split()))
 
 A = [_-1 for _ in A]
 B = [_-1 for _ in B]
@@ -15,7 +15,7 @@ que = [] # (コスト, 街ID)
 for cost, i in E[0]:
     heapq.heappush(que, (cost, i))
 
-visited_set = {0}
+visited = {0}
 res = []
 for threshold in X:
     candidates = []
@@ -23,11 +23,11 @@ for threshold in X:
         cost, i = heapq.heappop(que)
         candidates.append(i)
     for i in candidates:
-        if not i in visited_set:
-            visited_set.add(i)
+        if not i in visited:
+            visited.add(i)
             for new_cost, j in E[i]:
                 heapq.heappush(que, (new_cost, j))
-    res.append(len(visited_set))
+    res.append(len(visited))
 
 for r in res:
     print(r)
