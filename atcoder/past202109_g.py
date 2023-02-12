@@ -1,32 +1,29 @@
-import math
+def is_ok(x):
+    c = 0
+    for i in range(N):
+        if x < B[i]: continue
+        k = (x - B[i]) // C[i] + 1
+        c += min(k, A[i])
 
-N = int(input())
+    return c >= K
 
-# S = 3^0 + 3^1 + 3^2 + ... + 3^k
-# 3S = 3^1 + 3^1 + 3^2 + ... + 3^(k+1)
-# 2S = 3^(k+1) - 1
-#  S = (3^(k+1) - 1)/2
-# (3^(k+1) - 1)/2 >= N
-# 3^(k+1) - 1 >= 2N
-# 3^(k+1) >= 2N + 1
-# k+1 >= math.log(2N + 1, 3)
-# k = math.ceil(math.log(2N + 1, 3)) - 1
+N, K = map(int, input().split())
+A = []
+B = []
+C = []
+for _ in range(N):
+    a, b, c = map(int, input().split())
+    A.append(a)
+    B.append(b)
+    C.append(c)
 
-ans = []
-L = N
-while L != 0:
-    k = math.ceil(math.log(2*abs(L) + 1, 3)) - 1
-    n = 3**k
-    if L < 0:
-        n *= -1
-    ans.append(n)
-    # print(N, k, n, ans)
-    L -= n
+ok = 1<<60
+ng = 0
+while abs(ok - ng) > 1:
+    mid = (ok + ng) // 2
+    if is_ok(mid):
+        ok = mid
+    else:
+        ng = mid
 
-M = len(ans)
-print(M)
-print(*ans)
-
-assert 1 <= M <= 100
-assert sum(ans) == N
-assert len(set(map(abs, ans))) == M
+print(ok)
