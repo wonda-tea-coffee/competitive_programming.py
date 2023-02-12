@@ -1,12 +1,12 @@
-import random
+from itertools import permutations
 
 N = int(input())
 S = input()
+sl = list(S)
+revs = "".join(reversed(sl))
 
-if len(S) <= 2 or len(set(S)) == 1:
-    print("None")
-else:
-    T = list(S)
-    while "".join(T) == S or "".join(T) == "".join(reversed(S)):
-        random.shuffle(T)
-    print("".join(T))
+for t in permutations(sl):
+    u = "".join(t)
+    if u != S and u != revs:
+        exit(print(u))
+print("None")
