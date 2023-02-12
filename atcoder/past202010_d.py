@@ -1,27 +1,28 @@
 N = int(input())
 S = input()
 
-l = 0
 li = 0
-while li < N and S[li] == ".":
-    l += 1
+lc = 0
+while S[li] == ".":
     li += 1
-r = 0
+    lc += 1
+
 ri = N-1
-while ri >= 0 and S[ri] == ".":
+rc = 0
+while S[ri] == ".":
     ri -= 1
-    r += 1
+    rc += 1
 
-d = "."
-m = 0
-# print(l, r)
-# print(S[l:N-r])
-while S[l:N+r].count(d) > 0:
-    d += "."
-    m += 1
+mid = 0
+while li <= ri:
+    c = 0
+    while li <= ri and S[li] == ".":
+        li += 1
+        c += 1
+    mid = max(mid, c)
+    li += 1
 
-# print(m)
-while l + r < m:
-    l += 1
+while lc + rc < mid:
+    lc += 1
 
-print(l, r)
+print(lc, rc)
