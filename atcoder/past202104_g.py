@@ -1,34 +1,33 @@
-from collections import deque, defaultdict
-import sys
-input = lambda: sys.stdin.readline().rstrip()
+import heapq
 
 N, M, Q = map(int, input().split())
-G = [[] for _ in range(N)]
-for _ in range(M):
-    a, b, c = map(int, input().split())
-    a -= 1
-    b -= 1
-    G[a].append((b, c))
-    G[b].append((a, c))
-X = list(map(int, input().split()))
+A, B, C = zip(*[map(int, input().split()) for _ in range(M)])
+X = [*map(int, input().split())]
 
-T = [-1] * N
-visited = defaultdict(lambda: set())
-visited[0].add(0)
-deq = deque([(0, 0)])
-while deq:
-    cur, day = deq.popleft()
-    # print("cur:", cur, "day:", day, "G[cur]:", G[cur])
-    if day == Q: break
+A = [_-1 for _ in A]
+B = [_-1 for _ in B]
+E = [[] for _ in range(N)]
+for i, j, cost in zip(A, B, C):
+    E[i].append((cost, j))
+    E[j].append((cost, i))
 
-    deq.append((cur, day+1))
-    visited[day].add(cur)
+que = [] # (コスト, 街ID)
+for cost, i in E[0]:
+    heapq.heappush(que, (cost, i))
 
-    for to, cost in G[cur]:
-        if (T[to] == -1 or T[to] < X[day]) and cost <= X[day]:
-            T[to] = X[day]
-            deq.append((to, day+1))
-            visited[day].add(to)
+visited_set = {0}
+res = []
+for threshold in X:
+    candidates = []
+    while que and que[0][0] <= threshold:
+        cost, i = heapq.heappop(que)
+        candidates.append(i)
+    for i in candidates:
+        if not i in visited_set:
+            visited_set.add(i)
+            for new_cost, j in E[i]:
+                heapq.heappush(que, (new_cost, j))
+    res.append(len(visited_set))
 
-for i in range(Q):
-    print(len(visited[i]))
+for r in res:
+    print(r)

@@ -17,7 +17,7 @@ for _ in range(N):
     B.append(b)
     C.append(c)
 
-ok = 1<<60
+ok = max(B) + max(A)*max(C)
 ng = 0
 while abs(ok - ng) > 1:
     mid = (ok + ng) // 2
