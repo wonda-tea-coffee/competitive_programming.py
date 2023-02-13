@@ -2,7 +2,7 @@ import heapq
 
 N, M = map(int, input().split())
 G = [[] for _ in range(N)]
-for i in range(M):
+for _ in range(M):
     u, v, c = map(int, input().split())
     G[u].append((v, c))
 
