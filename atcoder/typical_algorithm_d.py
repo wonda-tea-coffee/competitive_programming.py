@@ -15,13 +15,10 @@ done[0] = True
 
 while Q:
     d, v = heapq.heappop(Q)
-
-    if v == N-1:
-        print(d)
-        break
-
     for nv, c in G[v]:
         nd = d+c
         if (dist[nv] == -1 or dist[nv] > nd) and not done[nv]:
             dist[nv] = nd
             heapq.heappush(Q, (nd, nv))
+
+print(dist[-1])
