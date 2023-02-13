@@ -2,29 +2,26 @@ import heapq
 
 N, M = map(int, input().split())
 G = [[] for _ in range(N)]
-dist = [-1] * N
 for i in range(M):
     u, v, c = map(int, input().split())
     G[u].append((v, c))
 
 Q = []
 heapq.heappush(Q, (0, 0))
+dist = [-1] * N
 dist[0] = 0
 done = [False] * N
+done[0] = True
 
-while len(Q) > 0:
+while Q:
     d, v = heapq.heappop(Q)
 
     if v == N-1:
         print(d)
         break
 
-    if done[v]:
-        continue
-
-    done[v] = True
-
     for nv, c in G[v]:
-        if dist[nv] == -1 or dist[nv] > d+c:
-            dist[nv] = d+c
-            heapq.heappush(Q, (d+c, nv))
+        nd = d+c
+        if (dist[nv] == -1 or dist[nv] > nd) and not done[nv]:
+            dist[nv] = nd
+            heapq.heappush(Q, (nd, nv))
