@@ -20,8 +20,8 @@ def shrink(t):
                 maxx = max(maxx, j)
 
     ret = [[None]*(maxx-minx+1) for _ in range(maxy-miny+1)]
-    for i in range(maxy+1):
-        for j in range(maxx+1):
+    for i in range(maxy-miny+1):
+        for j in range(maxx-minx+1):
             ret[i][j] = t[i+miny][j+minx]
     return ret
 
@@ -37,13 +37,23 @@ def rotate(t):
     return ret
 
 def search(t):
-    pass
+    h = len(t)
+    w = len(t[0])
+    for i in range(H-h+1):
+        for j in range(W-w+1):
+            if stamp(t, i, j): return True
+    return False
 
-def stamp(t):
-    pass
+def stamp(t, y, x):
+    h = len(t)
+    w = len(t[0])
+    for i in range(h):
+        for j in range(w):
+            if t[i][j] == "#" and S[y+i][x+j] == "#": return False
+    return True
 
 T = shrink(T)
-for _ in range(3):
+for _ in range(4):
     if search(T):
         exit(print("Yes"))
     T = rotate(T)
