@@ -1,28 +1,26 @@
 import sys
-sys.setrecursionlimit(10**8)
+sys.setrecursionlimit(1000000)
+input = lambda: sys.stdin.readline().rstrip()
 
 N, Q = map(int, input().split())
 edge = [[] for _ in range(N)]
-for i in range(N-1):
+for _ in range(N-1):
     a, b = map(lambda x: int(x)-1, input().split())
     edge[a].append(b)
     edge[b].append(a)
-
 cnt = [0]*N
-for j in range(Q):
+for _ in range(Q):
     p, x = map(int, input().split())
-    p -= 1
-    cnt[p] += x
+    cnt[p-1] += x
 
-seen = [True]*N
-seen[0] = False
-def dfs(u):
-    for v in edge[u]:
-        if seen[v] == False: continue
-
-        seen[u] = False
-        cnt[v] += cnt[u]
-        dfs(v)
+done = [False]*N
+done[0] = True
+def dfs(n):
+    for i in edge[n]:
+        if done[i]: continue
+        done[i] = True
+        cnt[i] += cnt[n]
+        dfs(i)
 
 dfs(0)
 
