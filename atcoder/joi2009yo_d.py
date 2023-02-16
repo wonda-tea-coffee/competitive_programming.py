@@ -1,26 +1,27 @@
-import sys
-sys.setrecursionlimit(1000000)
+from collections import deque
 
-w = int(input())
-h = int(input())
-s = []
-for _ in range(h):
-    s.append(list(map(bool, map(int, input().split()))))
+W = int(input())
+H = int(input())
+S = []
+for _ in range(H):
+    S.append(list(map(bool, map(int, input().split()))))
+
 ans = 0
+for i in range(H):
+    for j in range(W):
+        if not S[i][j]: continue
 
-def dfs(y, x, step, path):
-    global ans
+        deq = deque([(i, j, 1, set([(i, j)]))])
+        while deq:
+            y, x, step, visited = deq.pop()
 
-    ans = max(ans, step)
-    for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-        ny = y + dy
-        nx = x + dx
-        if 0 <= ny < h and 0 <= nx < w and s[ny][nx] and not (ny, nx) in path:
-            dfs(ny, nx, step+1, path|{(ny, nx)})
+            if step > ans:
+                ans = step
 
-for i in range(h):
-    for j in range(w):
-        if not s[i][j]: continue
-        dfs(i, j, 1, {(i, j)})
+            for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                ny = y + dy
+                nx = x + dx
+                if 0 <= ny < H and 0 <= nx < W and S[ny][nx] and not (ny, nx) in visited:
+                    deq.append((ny, nx, step+1, visited|{(ny, nx)}))
 
 print(ans)
