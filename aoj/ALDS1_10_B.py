@@ -1,14 +1,15 @@
 N = int(input())
-data = [tuple(map(int, input().split())) for _ in range(N)]
-dp = [[0]*(N+1) for _ in range(N+1)]
+M = [tuple(map(int, input().split())) for _ in range(N)]
+dp = [[float("inf")]*N for _ in range(N)]
 
-matrices = [data[0][0]] + list(map(lambda x: x[-1], data))
+# 長さ0連鎖の演算量
+for i in range(N):
+    dp[i][i] = 0
 
-for length in range(2, N+1):
-    for i in range(1, N-length+2):
-        j = i+length-1
-        dp[i][j] = float("inf")
+for le in range(1, len(M)):
+    for i in range(len(M)-le):
+        j = i + le
         for k in range(i, j):
-            dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + matrices[i-1] * matrices[k] * matrices[j])
+            dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + M[i][0]*M[k][1]*M[j][1])
 
-print(dp[1][N])
+print(dp[0][-1])
