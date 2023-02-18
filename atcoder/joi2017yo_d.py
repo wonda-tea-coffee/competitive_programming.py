@@ -16,11 +16,14 @@ dp[0] = 0
 for bit in range(1 << M):
     l = 0
     for m in range(M):
+        # 左端 l 個は既に並べ終わっているものとする
         if bit & (1 << m):
             l += D[m][-1]
     for m in range(M):
         if bit & (1 << m): continue
         r = l + D[m][-1]
+        # 種類mのぬいぐるみを位置l,l+1,...l+D[m][-1]-1(= D[m][-1]個)に並べるためのコスト
+        # = [l, l + D[m][-1])の範囲にいない種類mのぬいぐるみの数
         b = D[m][-1] - (D[m][r] - D[m][l])
 
         to = bit | (1 << m)
