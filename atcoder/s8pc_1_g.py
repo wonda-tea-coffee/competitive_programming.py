@@ -23,15 +23,19 @@ dist_dp[0][0] = 0
 num_dp[0][0] = 1
 
 for bit in range(1<<N):
-    # jからkに向かうとする．
+    # jからkに向かうとする
     for j in range(N):
-        if num_dp[bit][j] <= 0: continue
+        # この状態に来ることができない
+        if num_dp[bit][j] == 0: continue
 
         for k in range(N):
+            # kが既に訪問済み
             if (bit>>k) & 1 == 1: continue
-            ndist = dist_dp[bit][j] + dist[j][k]
-            if ndist > time[j][k]: continue
+            # 道路が無い
             if dist[j][k] == INF: continue
+            ndist = dist_dp[bit][j] + dist[j][k]
+            # 道が既に封鎖されている
+            if ndist > time[j][k]: continue
 
             to = bit | (1<<k)
             if dist_dp[to][k] == ndist:
