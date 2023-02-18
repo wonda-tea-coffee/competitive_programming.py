@@ -24,4 +24,8 @@ while True:
     N = int(input())
     if N == 0: break
     w = list(map(int, input().split()))
+<<<<<<< HEAD
+=======
+    dp = [[-1]*N for _ in range(N)]
+>>>>>>> e708bb6c2b2970895c2832ec5cf102a493704ba5
     print(solve())
