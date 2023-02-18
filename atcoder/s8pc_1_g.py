@@ -9,8 +9,9 @@ N, M = map(int, input().split())
 E = {}
 for _ in range(M):
     s, t, d, time = map(int, input().split())
-    E[(s-1, t-1)] = (d, time)
-    E[(t-1, s-1)] = (d, time)
+    s, t = s-1, t-1
+    E[(s, t)] = (d, time)
+    E[(t, s)] = (d, time)
 
 bc = {0: 0}
 for i in range(1, 1<<N):
@@ -21,8 +22,8 @@ INF = float("inf")
 goal = []
 dp = [[INF]*N for _ in range(1<<N)]
 for i in range(N):
-    dp[0][i] = (0, 0)
-    dp[1][i] = (0, 0)
+    dp[0][i] = 0
+    dp[1][i] = 0
 
 for n in range(1<<N):
     # スタートが訪問済みでない
@@ -42,11 +43,7 @@ for n in range(1<<N):
         m = n | (1<<t)
         # print("    m =", m, "s =", s, " t =", t, ", d =", d)
         # print("    ", dp[m][t], dp[n][s] + d)
-        ndp = dp[n][s][0] + d
-        if dp[m][t] == INF or ndp < dp[m][t][0]:
-            dp[m][t] = (ndp, dp[n][s][1])
-        elif ndp == dp[m][t][0]:
-            dp[m][t][1] += 1
+        dp[m][t] = min(dp[m][t], dp[n][s] + d)
 
 # print(dp[-1])
 for i in range(N):
@@ -55,9 +52,19 @@ for i in range(N):
     if not (i, 0) in E: continue
     d, time = E[(i, 0)]
     # print("    d, time = ", d, time)
-    if N-1 > time: continue
-    print(i, dp[-1][i][0], d)
+    if N > time: continue
+    goal.append(dp[-1][i] + d)
 
-# cnt = 0
-# minpath = INF
-print(goal)
+cnt = 0
+minpath = INF
+for x in goal:
+    if x < minpath:
+        cnt = 1
+        minpath = x
+    elif x == minpath:
+        cnt += 1
+
+if minpath == INF:
+    print("IMPOSSIBLE")
+else:
+    print(minpath, cnt)
