@@ -1,29 +1,39 @@
+# オリジナル
+# https://at274.hatenablog.com/entry/2020/04/09/224749
+
 import sys
-read = sys.stdin.buffer.read
-readline = sys.stdin.buffer.readline
-readlines = sys.stdin.buffer.readlines
+sys.setrecursionlimit(1000000)
 
-import numpy as np
+N = int(input())
+A = [int(input()) for _ in range(N)]
+dp = [[0]*N for _ in range(N)]
 
-N = int(readline())
-A = np.array(read().split(), np.int64)
+def dfs(i, j, picked):
+    if dp[i][j] > 0: return dp[i][j]
 
-# 順に二回並べることで円環を区間につぶしたまま作業できる
-A = np.concatenate([A, A])
+    if i == j:
+        if picked == 0:
+            dp[i][j] = A[i]
+            return dp[i][j]
+        else:
+            return 0
 
-# dp: 残りのピースがn個（A[i:i+n]）だったとして、最終的にJOI君が得るスコア
-# 小さいnから逐次的に更新していく（一次元配列を使い回す）
-dp = np.zeros(N, np.int64)
-for n in range(1, N+1):
-    dp = np.append(dp, dp[0]) # dpも円環
-    player = (N - n) & 1 # 最後のターンから考えるので、Nが偶数なら最後はIOI、奇数なら最後はJOI
-    if player == 0:
-        # JOI君
-        left = dp[1:N+1] + A[:N]
-        right = dp[:N] + A[n-1:N+n-1]
-        dp = np.maximum(left,right)
+    di, dj = (i + 1) % N, j - 1 if j - 1 >= 0 else N - 1
+    if picked == 0:
+        ret = max(dfs(di, j, 1) + A[i], dfs(i, dj, 1) + A[j])
     else:
-        # IOIちゃん
-        dp = np.where(A[:N] > A[n-1:N+n-1], dp[1:N+1], dp[:N])
+        if A[i] > A[j]:
+            ret = dfs(di, j, 0)
+        else:
+            ret = dfs(i, dj, 0)
 
-print(dp.max())
+    dp[i][j] = ret
+    return ret
+
+ans = 0
+for x in range(N):
+    s = (x + 1) % N
+    e = x - 1 if x - 1 >= 0 else N - 1
+    r = dfs(s, e, 1) + A[x]
+    ans = max(ans, r)
+print(ans)
