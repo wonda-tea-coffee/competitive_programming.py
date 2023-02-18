@@ -8,7 +8,7 @@ for _ in range(M):
 INF = float("inf")
 L = 1<<N
 ans = INF
-for start in range(1):
+for start in range(N):
     dp = [[INF]*N for _ in range(L)]
     for i in range(N):
         dp[0][i] = 0
