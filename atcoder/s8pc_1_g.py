@@ -1,70 +1,46 @@
-def bit_count(n):
-    ret = 0
-    while n > 0:
-        ret += n & 1
-        n >>= 1
-    return ret
+# オリジナル
+# https://atcoder.jp/contests/s8pc-1/submissions/38738519
 
 N, M = map(int, input().split())
-E = {}
-for _ in range(M):
-    s, t, d, time = map(int, input().split())
-    s, t = s-1, t-1
-    E[(s, t)] = (d, time)
-    E[(t, s)] = (d, time)
-
-bc = {0: 0}
-for i in range(1, 1<<N):
-    # スタート地点は訪問済みでないものと扱う
-    bc[i] = bit_count(i)-1
-
 INF = float("inf")
-goal = []
-dp = [[INF]*N for _ in range(1<<N)]
-for i in range(N):
-    dp[0][i] = 0
-    dp[1][i] = 0
+dist = [[INF]*N for i in range(N)]
+time = [[0]*N for i in range(N)]
+for i in range(M):
+    s, t, d, time_1 = map(int, input().split())
+    s, t = s-1, t-1
+    dist[s][t] = d
+    time[s][t] = time_1
+    dist[t][s] = d
+    time[t][s] = time_1
 
-for n in range(1<<N):
-    # スタートが訪問済みでない
-    if n & 1 == 0: continue
-    # print("  n =", n)
-    for s, t in E:
-        if dp[n][s] == INF: continue
+# dp[通ったとこ][今いるとこ]->今まで通ったところから今に至るまでの最短経路の距離,通り数
+# dp[S+k][k]=dp[S][j]+cost(j,k)
+# ans -> dp[1<<N][0] ∵0から始めても一般性を失わず，最後は0に帰ってくるから．
+dist_dp = [[INF]*N for i in range(1<<N)]
+num_dp = [[0]*N for i in range(1<<N)]
 
-        d, time = E[(s, t)]
-        # 頂点sが訪問済みでない
-        if (n>>s)&1 == 0: continue
-        # 頂点tに既に訪問している
-        if (n>>t)&1 == 1: continue
-        # 道路が閉鎖されている
-        if bc[n] > time: continue
+dist_dp[0][0] = 0
+num_dp[0][0] = 1
 
-        m = n | (1<<t)
-        # print("    m =", m, "s =", s, " t =", t, ", d =", d)
-        # print("    ", dp[m][t], dp[n][s] + d)
-        dp[m][t] = min(dp[m][t], dp[n][s] + d)
+for bit in range(1<<N):
+    # jからkに向かうとする．
+    for j in range(N):
+        if num_dp[bit][j] <= 0: continue
 
-# print(dp[-1])
-for i in range(N):
-    # print("  i =", i, "dp[-1][i] =", dp[-1][i], (i, start) in E)
-    if dp[-1][i] == INF: continue
-    if not (i, 0) in E: continue
-    d, time = E[(i, 0)]
-    # print("    d, time = ", d, time)
-    if N > time: continue
-    goal.append(dp[-1][i] + d)
+        for k in range(N):
+            if (bit>>k) & 1 == 1: continue
+            ndist = dist_dp[bit][j] + dist[j][k]
+            if ndist > time[j][k]: continue
+            if dist[j][k] == INF: continue
 
-cnt = 0
-minpath = INF
-for x in goal:
-    if x < minpath:
-        cnt = 1
-        minpath = x
-    elif x == minpath:
-        cnt += 1
+            to = bit | (1<<k)
+            if dist_dp[to][k] == ndist:
+                num_dp[to][k] += num_dp[bit][j]
+            elif dist_dp[to][k] > ndist:
+                num_dp[to][k] = num_dp[bit][j]
+            dist_dp[to][k] = min(dist_dp[to][k], ndist)
 
-if minpath == INF:
+if dist_dp[-1][0] == INF:
     print("IMPOSSIBLE")
 else:
-    print(minpath, cnt)
+    print(dist_dp[-1][0], num_dp[-1][0])
