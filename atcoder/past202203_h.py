@@ -9,7 +9,7 @@ class UnionFind:
         # 正の数の場合は親のインデックス
         # 負の数の場合は木のサイズ
         self.parent_or_size = [-1] * n
-    
+
     def merge(self, a, b):
         x = self.leader(a)
         y = self.leader(b)
