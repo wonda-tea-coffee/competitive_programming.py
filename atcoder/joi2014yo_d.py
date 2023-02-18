@@ -14,7 +14,6 @@ for i in range(8):
 
 for i in range(1, N):
     ndp = [0]*8
-    # dp[j]からndp[k]への遷移を考える
     for j in range(8):
         if dp[j] == 0: continue
         for k in range(8):
