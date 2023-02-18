@@ -1,28 +1,21 @@
-N, M = map(int, input().split())
-E = {}
-for _ in range(M):
+V, E = map(int, input().split())
+G = {}
+for _ in range(E):
     s, t, d = map(int, input().split())
-    E[(s, t)] = d
+    G[(s, t)] = d
 INF = float("inf")
-L = 1<<N
-dp = [[INF]*N for _ in range(L)]
-for i in range(N):
-    dp[0][i] = 0
-    dp[1][i] = 0
-for n in range(L):
-    if (n>>0)&1 == 0: continue
-    for s, t in E:
-        if (n>>s)&1 == 0: continue
-        if (n>>t)&1 == 1: continue
-        m = n | (1<<t)
-        dp[m][t] = min(dp[m][t], dp[n][s] + E[(s, t)])
+dp = [[INF]*V for _ in range(1<<V)]
+dp[0][0] = 0
 
-ans = INF
-for i in range(N):
-    if (i, 0) in E:
-        ans = min(ans, dp[-1][i] + E[(i, 0)])
+for bit in range(1<<V):
+    for s, t in G:
+        if dp[bit][s] == INF: continue
+        if bit != 0 and (bit>>s)&1 == 0: continue
+        if (bit>>t)&1 == 1: continue
+        to = bit | (1<<t)
+        dp[to][t] = min(dp[to][t], dp[bit][s] + G[(s, t)])
 
-if ans == INF:
+if dp[-1][0] == INF:
     print(-1)
 else:
-    print(ans)
+    print(dp[-1][0])
