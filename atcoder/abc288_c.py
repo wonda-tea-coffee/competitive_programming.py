@@ -1,29 +1,24 @@
-import sys
-sys.setrecursionlimit(1000000)
+from collections import deque
 
 N, M = map(int, input().split())
-G = [[] for _ in range(N)]
+E = [[] for _ in range(N)]
 for _ in range(M):
     a, b = map(lambda x: int(x)-1, input().split())
-    G[a].append(b)
-    G[b].append(a)
+    E[a].append(b)
+    E[b].append(a)
 
-visited = set()
-heiro = set()
-def dfs(cur, pre):
-    if cur in visited: return
-    visited.add(cur)
-
-    for gi in G[cur]:
-        if gi == pre: continue
-        if gi in visited:
-            # print(pre, cur, gi)
-            heiro.add((cur, gi))
-            heiro.add((gi, cur))
-        else:
-            dfs(gi, cur)
-
+S = 0
+done = [False]*N
 for i in range(N):
-    dfs(i, -1)
+    if done[i]: continue
+    S += 1
+    Q = deque([i])
+    while Q:
+        cur = Q.popleft()
+        if done[cur]: continue
+        done[cur] = True
+        for to in E[cur]:
+            if done[to]: continue
+            Q.append(to)
 
-print(len(heiro)//2)
+print(M - N + S)
