@@ -1,14 +1,10 @@
 N, K = map(int, input().split())
 h = list(map(int, input().split()))
-dp = [0] * N
-
-for i in range(1, N):
-    m = 10 ** 18
-    ki = 1
-    while ki <= K and i - ki >= 0:
-        m = min(m, abs(h[i] - h[i - ki]) + dp[i - ki])
-        ki += 1
-    dp[i] = m
-
-# print(dp)
-print(dp[N - 1])
+dp = [float("inf")]*N
+dp[0] = 0
+for i in range(N):
+    j = 1
+    while j <= K and i-j >= 0:
+        dp[i] = min(dp[i], dp[i-j] + abs(h[i] - h[i-j]))
+        j += 1
+print(dp[-1])
