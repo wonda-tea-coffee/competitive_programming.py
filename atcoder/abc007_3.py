@@ -1,33 +1,25 @@
 from collections import deque
 
-R, C = map(int, input().split())
-sy, sx = map(int, input().split())
-gy, gx = map(int, input().split())
-G = []
-for i in range(R):
-    G.append(input())
-F = [[False] * C for i in range(R)]
+R, C  = map(int, input().split())
+sy, sx = map(lambda x: int(x)-1, input().split())
+gy, gx = map(lambda x: int(x)-1, input().split())
+S = [input() for _ in range(R)]
 
-sy -= 1
-sx -= 1
-gy -= 1
-gx -= 1
-
-queue = deque()
-queue.append((sy, sx, 0))
-F[sy][sx] = True
-
-while len(queue) > 0:
-    y, x, c = queue.popleft()
+Q = deque([(sy, sx, 0)])
+done = set()
+while Q:
+    y, x, step = Q.popleft()
+    # print(y, x, step)
 
     if y == gy and x == gx:
-        print(c)
-        break
+        print(step)
+        exit()
 
-    nc = c + 1
-    for d in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-        ny = y + d[0]
-        nx = x + d[1]
-        if ny >= 0 and ny < R and nx >= 0 and nx < C and not F[ny][nx] and G[ny][nx] == ".":
-            F[ny][nx] = True
-            queue.append((ny, nx, nc))
+    if (y, x) in done: continue
+    done.add((y, x))
+
+    for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        ny = y + dy
+        nx = x + dx
+        if 0 <= ny < R and 0 <= nx < C and S[ny][nx] == "." and not (ny, nx) in done:
+            Q.append((ny, nx, step+1))
