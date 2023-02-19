@@ -1,41 +1,22 @@
-# https://atcoder.jp/contests/past202005-open/submissions/20050113
-
-N, L = list(map(int, input().split()))
-X = list(map(int, input().split()))
-T1, T2, T3 = list(map(int, input().split()))
-
-# ハードルがある座標において True となるような配列
+N, L = map(int, input().split())
 H = [False]*(L+1)
-for x in X:
-    H[x] = True
+x = list(map(int, input().split()))
+for xi in x: H[xi] = True
+T1, T2, T3 = map(int, input().split())
+dp = [float("inf")]*(L+1)
+dp[0] = 0
 
-# cost[i]: 座標 i で行動を終了するまでの最小所要時間。
-# 非常に大きな値で初期化しておき、min を用いて更新する。
-cost = [10**100]*(L+1)
-
-# 初期条件
-cost[0] = 0
-
-# 順番に求めていく
 for i in range(1, L+1):
-    # 行動 1
-    cost[i] = min(cost[i], cost[i-1] + T1)
-    # 行動 2
+    dp[i] = dp[i-1] + T1
     if i >= 2:
-        cost[i] = min(cost[i], cost[i-2] + T1 + T2)
-    # 行動 3
+        dp[i] = min(dp[i], dp[i-2] + T1 + T2)
     if i >= 4:
-        cost[i] = min(cost[i], cost[i-4] + T1 + 3*T2)
-    # 問題文中で
-    # 通り過ぎるときに座標xにハードルがある場合、その地点を通り過ぎるのに追加で～
-    # とある
-    # 次の行動をする際に加算するとよいが、通り過ぎる前に加算しても結果は変わらない
+        dp[i] = min(dp[i], dp[i-4] + T1 + 3*T2)
     if H[i]:
-        cost[i] += T3
+        dp[i] += T3
 
-# 答えは座標 L にぴったり止まるか、座標 (L-3) ～ (L-1)からジャンプ中にゴールしたもの。
-ans = cost[L]
-for i in [L-3, L-2, L-1]:
+ans = dp[L]
+for i in [L-1, L-2, L-3]:
     if i >= 0:
-        ans = min(ans, cost[i] + T1//2 + T2*(2*(L-i)-1)//2)
+        ans = min(ans, dp[i] + T1//2 + T2*(2*(L-i)-1)//2)
 print(ans)
