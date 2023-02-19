@@ -1,26 +1,16 @@
-import sys
-sys.setrecursionlimit(1000000)
+from collections import deque
 
-def dfs(x):
-    global ans, ln
-
-    if x <= M:
-        ln.append(x)
-        ans += 1
-
-    d = x % 10
-    if x * 10 + d <= M:
-        dfs(x * 10 + d)
-    if d > 0 and x * 10 + d - 1 <= M:
-        dfs(x * 10 + d - 1)
-    if d < 9 and x * 10 + d + 1 <= M:
-        dfs(x * 10 + d + 1)
-
-ans = 0
-ln = []
 K = int(input())
-M = 10**10
-for i in range(1, 10):
-    dfs(i)
+Q = deque(list(range(1, 10)))
+cnt = 0
 
-print(sorted(ln)[K - 1])
+while Q:
+    cnt += 1
+    n = Q.popleft()
+    if cnt == K:
+        print(n)
+        exit()
+    l = n % 10
+    if l > 0: Q.append(n*10+l-1)
+    Q.append(n*10+l)
+    if l < 9: Q.append(n*10+l+1)
