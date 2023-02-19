@@ -1,31 +1,28 @@
-import sys
 from collections import deque
 
 N, X, Y = map(int, input().split())
-F = set()
-for i in range(N):
-    xi, yi = map(int, input().split())
-    F.add((xi, yi))
+v = [(1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 0)]
+kabe = set()
+for _ in range(N):
+    x, y = map(int, input().split())
+    kabe.add((y, x))
 
-queue = deque()
-queue.append((0, 0, 0))
-C = {}
+Q = deque([(0, 0, 0)])
+done = set()
+while Q:
+    y, x, step = Q.popleft()
 
-while len(queue) > 0:
-    x, y, c = queue.popleft()
+    if y == Y and x == X:
+        print(step)
+        exit()
 
-    # print("(%i, %i): %i" % (x, y, c))
+    if (y, x) in done: continue
+    done.add((y, x))
 
-    if x == X and y == Y:
-        print(c)
-        sys.exit(0)
-
-    nc = c + 1
-    for d in [(1, 1), (0, 1), (-1, 1), (1, 0), (-1, 0), (0, -1)]:
-        nx = x + d[0]
-        ny = y + d[1]
-        if not (nx, ny) in F and (not (nx, ny) in C or nc < C[(nx, ny)]) and abs(nx) <= 201 and abs(ny) <= 201:
-            C[(nx, ny)] = nc
-            queue.append((nx, ny, nc))
+    for dy, dx in v:
+        ny = y + dy
+        nx = x + dx
+        if not (ny, nx) in done and not (ny, nx) in kabe and abs(ny) <= 201 and abs(nx) <= 201:
+            Q.append((ny, nx, step+1))
 
 print(-1)
