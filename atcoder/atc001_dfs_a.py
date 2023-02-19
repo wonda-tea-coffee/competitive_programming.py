@@ -1,35 +1,33 @@
-# Pythonでのみ通る
-# PyPyだと通らないことに注意
-
 import sys
 sys.setrecursionlimit(1000000)
 
-def dfs(y, x):
-    visited[y][x] = True
+H, W = map(int, input().split())
+sy, sx = -1, -1
+gy, gx = -1, -1
+c = []
+for i in range(H):
+    ci = input()
+    c.append(ci)
+    for j in range(W):
+        if ci[j] == "s":
+            sy, sx = i, j
+        elif ci[j] == "g":
+            gy, gx = i, j
 
-    for d in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-        ny = y + d[0]
-        nx = x + d[1]
-        if ny >= 0 and ny < H and nx >= 0 and nx < W and not visited[ny][nx] and not G[ny][nx] == "#":
+done = [[False]*W for _ in range(H)]
+def dfs(y, x):
+    if y == gy and x == gx:
+        print("Yes")
+        exit()
+
+    if done[y][x]: return
+    done[y][x] = True
+    for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        ny = y + dy
+        nx = x + dx
+        if 0 <= ny < H and 0 <= nx < W and not done[ny][nx] and c[ny][nx] != "#":
             dfs(ny, nx)
 
-H, W = map(int, input().split())
-G = []
-for i in range(H):
-    G.append(input())
+dfs(sy, sx)
 
-visited = [[False] * W for i in range(H)]
-
-for i in range(H):
-    for j in range(W):
-        if G[i][j] == "s":
-            si, sj = i, j
-        elif G[i][j] == "g":
-            gi, gj = i, j
-
-dfs(si, sj)
-
-if visited[gi][gj]:
-    print("Yes")
-else:
-    print("No")
+print("No")
