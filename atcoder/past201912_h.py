@@ -1,46 +1,37 @@
-def stock(i, cnt1, cnt2, cnt3):
-    sale = cnt1[i] + cnt3
-    if i % 2 == 0: sale += cnt2
-    return C[i] - sale
-
 N = int(input())
 C = list(map(int, input().split()))
-minall = min(C)
-minodd = min(C[::2])
-Q = int(input())
-ans = 0
-cnt1 = [0]*N
+sell = [0]*N
 cnt2 = 0
 cnt3 = 0
-for i in range(Q):
+min2 = min(C[0::2])
+minall = min(C)
+
+Q = int(input())
+for _ in range(Q):
     t, *q = map(int, input().split())
+
     if t == 1:
         x, a = q
         x -= 1
-
-        s = stock(x, cnt1, cnt2, cnt3)
-        if s >= a:
-            ans += a
-            cnt1[x] += a
-            s -= a
-            if x % 2 == 0 and minodd > s:
-                minodd = s
-            if minall > s:
-                minall = s
+        sx = C[x] - sell[x] - cnt3
+        if x % 2 == 0: sx -= cnt2
+        if sx >= a:
+            sx -= a
+            sell[x] += a
+            if x % 2 == 0: min2 = min(min2, sx)
+            minall = min(minall, sx)
     elif t == 2:
         a = q[0]
-        if minodd >= a:
+        if min2 >= a:
+            min2 -= a
             cnt2 += a
-            ans += a * ((N+1)//2)
-            minodd -= a
-            if minall > minodd:
-                minall = minodd
-    elif t == 3:
+            minall = min(minall, min2)
+    else:
         a = q[0]
         if minall >= a:
-            cnt3 += a
-            ans += a * N
+            min2 -= a
             minall -= a
-            minodd -= a
+            cnt3 += a
 
-print(ans)
+# print(sell, cnt2, cnt3)
+print(sum(sell) + cnt2*((N+1)//2) + cnt3*N)
