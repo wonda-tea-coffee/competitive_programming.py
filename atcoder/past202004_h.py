@@ -1,33 +1,26 @@
-import sys
-
-INF = 10**100
 N, M = map(int, input().split())
-A = []
-for i in range(N):
-    A.append(input())
-cost = [[INF] * M for _ in range(N)]
-
-h = {}
+A = [input() for _ in range(N)]
+E = [[] for _ in range(11)]
 for i in range(N):
     for j in range(M):
-        if A[i][j] in h:
-            h[A[i][j]].append((i, j))
+        if A[i][j] == "S":
+            E[0].append((i, j))
+        elif A[i][j] == "G":
+            E[-1].append((i, j))
         else:
-            h[A[i][j]] = [(i, j)]
+            E[int(A[i][j])].append((i, j))
+INF = float("inf")
+dp = [[INF]*M for _ in range(N)]
+sy, sx = E[0][0]
+dp[sy][sx] = 0
 
-cost[h['S'][0][0]][h['S'][0][1]] = 0
-C = ['S', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'G']
-for i in range(len(C) - 1):
-    if not C[i] in h or not C[i+1] in h:
-        continue
-    for sy, sx in h[C[i]]:
-        for gy, gx in h[C[i+1]]:
-            cost[gy][gx] = min(cost[gy][gx], abs(gy - sy) + abs(gx - sx) + cost[sy][sx])
+for i in range(10):
+    for y1, x1 in E[i]:
+        for y2, x2 in E[i+1]:
+            dp[y2][x2] = min(dp[y2][x2], dp[y1][x1]+abs(y2-y1)+abs(x2-x1))
 
-# print(h)
-# print(cost)
-gy, gx = h['G'][0]
-if cost[gy][gx] == INF:
+gy, gx = E[-1][0]
+if dp[gy][gx] == INF:
     print(-1)
 else:
-    print(cost[gy][gx])
+    print(dp[gy][gx])
