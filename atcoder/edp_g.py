@@ -1,32 +1,27 @@
-def rec(n):
-    if done[n]:
-        return length[n]
-
-    length[n] = 0
-    for m in edges[n]:
-        length[n] = max(length[n], rec(m) + 1)
-
-    done[n] = True
-    return length[n]
-
 import sys
 sys.setrecursionlimit(1000000)
 
+def solve(x):
+    if memo[x] >= 0: return memo[x]
+
+    ret = 0
+    for y in E[x]:
+        ret = max(ret, solve(y)+1)
+
+    memo[x] = ret
+    return memo[x]
+
 N, M = map(int, input().split())
-edges = []
-for i in range(N):
-    edges.append([])
-indeg = [0] * N
-length = [0] * N
-done = [False] * N
+E = [[] for _ in range(N)]
+indeg = [0]*N
+for _ in range(M):
+    x, y = map(lambda x: int(x)-1, input().split())
+    E[x].append(y)
+    indeg[y] += 1
+memo = [-1]*N
 
-for i in range(M):
-    x, y = map(int, input().split())
-    edges[x-1].append(y-1)
-    indeg[y-1] += 1
-
+ans = 0
 for i in range(N):
     if indeg[i] == 0:
-        rec(i)
-
-print(max(length))
+        ans = max(ans, solve(i))
+print(ans)
