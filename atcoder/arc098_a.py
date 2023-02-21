@@ -1,27 +1,20 @@
 N = int(input())
 S = input()
-sumW = []
-sumE = []
-cntW = 0
-cntE = 0
+E = [0]
+W = [0]
+cnte = 0
+cntw = 0
 for i in range(N):
-    if S[i] == "W":
-        cntW += 1
+    if S[i] == "E":
+        cnte += 1
     else:
-        cntE += 1
-    sumW.append(cntW)
-    sumE.append(cntE)
+        cntw += 1
+    E.append(cnte)
+    W.append(cntw)
 
-ans = 10**100
+ans = 10**10
 for i in range(N):
-    lw, re = 0, 0
-
-    if i > 0:
-        lw = sumW[i-1]
-
-    if i < N-1:
-        re = sumE[N-1] - sumE[i]
-
-    ans = min(ans, lw + re)
+    # iより西の人に東を向かせて、iより東の人を西に向かせる
+    ans = min(ans, W[i] + E[-1] - E[i+1])
 
 print(ans)
