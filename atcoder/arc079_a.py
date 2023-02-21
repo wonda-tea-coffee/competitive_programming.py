@@ -1,25 +1,29 @@
-from collections import deque
+import heapq
 
 N, M = map(int, input().split())
-G = [[] for _ in range(N+1)]
-F = [False] * (N+1)
+G = [[] for _ in range(N)]
 for i in range(M):
-    a, b = map(int, input().split())
-    G[a].append(b)
-    G[b].append(a)
+    a, b = map(lambda x: int(x)-1, input().split())
+    G[a].append((b, 1))
+    G[b].append((a, 1))
 
-queue = deque()
-F[1] = True
-queue.append((1, 0))
-while len(queue) > 0:
-    s, c = queue.popleft()
+Q = []
+done = [False]*N
+heapq.heappush(Q, (0, 0))
+min_dist = [-1]*N
+while Q:
+    dist, cur = heapq.heappop(Q)
 
-    for ns in G[s]:
-        if not F[ns] and c < 2:
-            F[ns] = True
-            queue.append((ns, c+1))
+    if done[cur]: continue
+    done[cur] = True
 
-if F[N]:
+    for to, d in G[cur]:
+        ndist = dist+d
+        if not done[to] and ndist <= 2 and (min_dist[to] == -1 or ndist < min_dist[to]):
+            min_dist[to] = ndist
+            heapq.heappush(Q, (ndist, to))
+
+if min_dist[-1] == 2:
     print("POSSIBLE")
 else:
     print("IMPOSSIBLE")
