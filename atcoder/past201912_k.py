@@ -3,17 +3,17 @@ input = lambda: sys.stdin.readline().rstrip()
 
 N = int(input())
 C = [[] for _ in range(N)]
-r = -1
+root = -1
 for i in range(N):
     p = int(input())
     if p == -1:
-        r = i
+        root = i
     else:
         C[p-1].append(i)
 
 L = [-1] * N
 R = [-1] * N
-stk = [r]
+stk = [root]
 t = -1
 while stk:
     v = stk.pop()
