@@ -1,38 +1,32 @@
-# 最小全域木
-# プリム法
-
 import heapq
 
 N, M = map(int, input().split())
-G = [[] for _ in range(N)]
-for i in range(M):
+E = [[] for _ in range(N)]
+for _ in range(M):
     u, v, c = map(int, input().split())
-    G[u].append((v, c))
-    G[v].append((u, c))
+    E[u].append((v, c))
+    E[v].append((u, c))
 
-marked = [False] * N
+marked = [False]*N
 marked[0] = True
 marked_count = 1
-Q = []
-
-for v, c in G[0]:
-    heapq.heappush(Q, (c, v))
-
 ans = 0
+Q = []
+for to, c in E[0]:
+    heapq.heappush(Q, (c, to))
+
 while marked_count < N:
-    c, i = heapq.heappop(Q)
+    cost, cur = heapq.heappop(Q)
 
-    if marked[i]:
-        continue
-
-    marked[i] = True
+    if marked[cur]: continue
+    marked[cur] = True
     marked_count += 1
-    ans += c
 
-    for j, c in G[i]:
-        if marked[j]:
-            continue
+    # print(cur, cost)
+    ans += cost
 
-        heapq.heappush(Q, (c, j))
+    for to, ncost in E[cur]:
+        if marked[to]: continue
+        heapq.heappush(Q, (ncost, to))
 
 print(ans)

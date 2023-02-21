@@ -1,25 +1,17 @@
 H, W = map(int, input().split())
-G = [None] * H
-dist = [[0] * W for i in range(H)]
-MOD = 10**9 + 7
+a = [input() for _ in range(H)]
+dp = [[0]*W for _ in range(H)]
+
 for i in range(H):
-    G[i] = input()
+    if a[i][0] == "#": break
+    dp[i][0] = 1
+for i in range(W):
+    if a[0][i] == "#": break
+    dp[0][i] = 1
 
-for hi in range(H):
-    if G[hi][0] == "#":
-        break
-    dist[hi][0] = 1
+for i in range(1, H):
+    for j in range(1, W):
+        if a[i][j] == "#": continue
+        dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % 1_000_000_007
 
-for wi in range(W):
-    if G[0][wi] == "#":
-        break
-    dist[0][wi] = 1
-
-for hi in range(1, H):
-    for wi in range(1, W):
-        if G[hi][wi] == "#":
-            continue
-
-        dist[hi][wi] = (dist[hi-1][wi] + dist[hi][wi-1]) % MOD
-
-print(dist[H-1][W-1])
+print(dp[-1][-1])
