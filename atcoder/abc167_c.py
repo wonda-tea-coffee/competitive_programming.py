@@ -1,28 +1,26 @@
 N, M, X = map(int, input().split())
-C = []
 A = []
-for i in range(N):
-    s = list(map(int, input().split()))
-    C.append(s[0])
-    A.append(s[1:])
+C = []
+for _ in range(N):
+    c, *a = map(int, input().split())
+    C.append(c)
+    A.append(a)
 
-INF = 10**100
+INF = float("inf")
 ans = INF
-# 買い方の組み合わせ
-for i in range(2**N):
-    comprehension = [0] * M
+for bit in range(1<<N):
+    rikaido = [0]*M
     cost = 0
-    for j in range(N):
-        if i >> j & 1:
-            cost += C[j]
-            for k in range(M):
-                comprehension[k] += A[j][k]
+    for i in range(N):
+        if (bit>>i)&1 == 0: continue
+        cost += C[i]
+        for j in range(M):
+            rikaido[j] += A[i][j]
 
-    f = True
-    for c in comprehension:
-        f &= c >= X
-
-    if f:
+    res = True
+    for r in rikaido:
+        res &= r >= X
+    if res:
         ans = min(ans, cost)
 
 if ans == INF:
