@@ -1,37 +1,37 @@
 import sys
 sys.setrecursionlimit(1000000)
 
-def euler(u, pa=-1):
-    global idx
-
-    L[u] = idx
-    idx += 1
-    for v in E[u]:
-        if v != pa:
-            euler(v, u)
-    R[u] = idx
-
-idx = 0
-root = -1
 N = int(input())
-E = [[] for i in range(N+1)]
-L = [-1] * (N+1)
-R = [-1] * (N+1)
-
-for i in range(1, N+1):
-    pi = int(input())
-    if pi == -1:
-        root = i
+R = -1
+edges = [[] for _ in range(N)]
+for i in range(N):
+    p = int(input())
+    if p == -1:
+        R = i
     else:
-        E[pi].append(i)
-        E[i].append(pi)
-
-euler(root)
+        edges[p-1].append(i)
 
 Q = int(input())
-for i in range(Q):
-    a, b = map(int, input().split())
-    if L[b] <= L[a] and R[a] <= R[b]:
+queries = [[] for _ in range(N)]
+for q in range(Q):
+    a, b = map(lambda x: int(x)-1, input().split())
+    queries[a].append((q, b))
+
+ans = [False]*Q
+boss = [False]*N
+
+def dfs(i):
+    for q, b in queries[i]:
+        ans[q] = boss[b]
+    boss[i] = True
+    for j in edges[i]:
+        dfs(j)
+    boss[i] = False
+
+dfs(R)
+
+for q in range(Q):
+    if ans[q]:
         print("Yes")
     else:
         print("No")
