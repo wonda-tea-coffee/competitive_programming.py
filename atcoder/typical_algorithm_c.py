@@ -1,21 +1,18 @@
-def has_bit(n, i):
-    return (n & (1<<i)) > 0
-
 N = int(input())
-A = []
-for i in range(N):
-    A.append(list(map(int, input().split())))
-ALL = 1<<N
-cost = [[10**100] * N for _ in range(ALL)]
-# print(A)
-cost[0][0] = 0
-for n in range(ALL):
+A = [list(map(int, input().split())) for _ in range(N)]
+
+INF = float("inf")
+dp = [[INF]*N for _ in range(1<<N)]
+dp[0][0] = 0
+
+for bit in range(1<<N):
+    if dp[bit] == INF: continue
     for i in range(N):
         for j in range(N):
-            if has_bit(n, j) or i == j:
-                continue
+            if i == j: continue
+            if bit&(1<<j): continue
+            to = bit | (1<<j)
+            ncost = dp[bit][i] + A[i][j]
+            dp[to][j] = min(dp[to][j], ncost)
 
-            # print(cost[n|j])
-            cost[n|1<<j][j] = min(cost[n|1<<j][j], cost[n][i] + A[i][j])
-
-print(cost[ALL-1][0])
+print(dp[-1][0])
