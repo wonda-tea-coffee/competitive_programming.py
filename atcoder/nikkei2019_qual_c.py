@@ -1,16 +1,15 @@
 N = int(input())
-s = []
-for i in range(N):
-    ai, bi = map(int, input().split())
-    s.append((-ai-bi, ai, bi))
+Q = []
+for _ in range(N):
+    a, b = map(int, input().split())
+    Q.append((-a-b, a, b))
+Q.sort()
 
-s.sort()
-ans = 0
+takahashi = 0
+aoki = 0
 for i in range(N):
-    _, a, b = s[i]
     if i % 2 == 0:
-        ans += a
+        takahashi += Q[i][1]
     else:
-        ans -= b
-
-print(ans)
+        aoki += Q[i][2]
+print(takahashi - aoki)
