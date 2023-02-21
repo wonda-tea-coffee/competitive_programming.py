@@ -1,3 +1,6 @@
+import sys
+input = lambda: sys.stdin.readline().rstrip()
+
 N = int(input())
 C = [[] for _ in range(N)]
 r = -1
