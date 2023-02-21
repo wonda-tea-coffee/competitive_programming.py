@@ -1,22 +1,21 @@
+import bisect
+
 N = int(input())
-M = 101
-c = [[] for _ in range(M)]
-for i in range(N):
-    Ai, Bi = map(int, input().split())
-    c[Bi].append(Ai)
-
-for i in range(M):
-    c[i].sort()
-
+X = [[] for _ in range(N)]
+for _ in range(N):
+    a, b = map(int, input().split())
+    X[a-1].append(b)
+cnt = [0]*101
 ans = 0
-# print(c)
-for i in range(1, N+1):
-    for j in range(M-1, 0, -1):
-        if len(c[j]) == 0:
-            continue
 
-        if c[j][0] <= i:
-            ans += j
-            print(ans)
-            c[j].remove(c[j][0])
-            break
+for d in range(N):
+    for x in X[d]:
+        cnt[x] += 1
+
+    for i in range(100, -1, -1):
+        if cnt[i] == 0: continue
+        ans += i
+        cnt[i] -= 1
+        break
+
+    print(ans)
