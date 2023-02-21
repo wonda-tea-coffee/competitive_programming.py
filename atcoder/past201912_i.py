@@ -1,26 +1,24 @@
 N, M = map(int, input().split())
-S = [0]
-C = [0]
-for i in range(M):
+S = []
+C = []
+for _ in range(M):
     s, c = input().split()
-    s_val = 0
-    for j in range(N):
-        if s[j] == 'Y':
-            s_val |= 1<<j
-    S.append(s_val)
+    S.append(s)
     C.append(int(c))
+INF = float("inf")
+dp = [INF]*(1<<N)
+dp[0] = 0
 
-ALL = 1<<N
-INF = 10**100
-cost = [[INF] * ALL for _ in range(M+1)]
+for bit in range(1<<N):
+    if dp[bit] == INF: continue
+    for m in range(M):
+        to = bit
+        for si in range(N):
+            if S[m][si] == "N": continue
+            to |= 1<<si
+        dp[to] = min(dp[to], dp[bit] + C[m])
 
-cost[0][0] = 0
-for i in range(1, M+1):
-    for n in range(ALL):
-        cost[i][n] = min(cost[i][n], cost[i-1][n])
-        cost[i][n|S[i]] = min(cost[i][n|S[i]], cost[i-1][n] + C[i])
-
-if cost[M][ALL-1] == INF:
+if dp[-1] == INF:
     print(-1)
 else:
-    print(cost[M][ALL-1])
+    print(dp[-1])
