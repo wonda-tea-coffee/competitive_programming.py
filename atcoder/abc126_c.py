@@ -1,16 +1,13 @@
 N, K = map(int, input().split())
+ans = 0
 
-s = 0
-for i in range(1, min(K, N+1)):
-    t = 0
+for i in range(1, N+1):
+    t = 1
     j = i
     while j < K:
-        t += 1
         j *= 2
-    s += 1/(N*2**t)
+        t /= 2
+    # print(i, t)
+    ans += t/N
 
-if K <= N:
-    ans = 1 + s - (K-1)/N
-else:
-    ans = s
 print(ans)
