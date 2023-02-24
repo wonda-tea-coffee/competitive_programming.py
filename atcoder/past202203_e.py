@@ -1,38 +1,28 @@
 def is_leap(y):
-    if y % 400 == 0:
-        return True
-    elif y % 100 == 0:
-        return False
-    else:
-        return y % 4 == 0
+    if y % 400 == 0: return True
+    if y % 100 == 0: return False
+    return y % 4 == 0
 
-def next_day(y, m, d):
-    ld = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    if is_leap(y):
-        ld[2] += 1
+def is_lastday(y, m, d):
+    if m == 2 and is_leap(y): return d == 29
+    return lastday[m] == d
 
-    if d == ld[m]:
-        d = 1
-        m += 1
-        if m == 13:
-            m = 1
-            y += 1
-    else:
-        d += 1
+def nextday(y, m, d):
+    if not is_lastday(y, m, d): return y, m, d+1
+    if m != 12: return y, m+1, 1
+    return y+1, 1, 1
 
-    return y, m, d
+lastday = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30, 7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
 
-def is_good(s):
-    return len(set("".join(s.split("/")))) <= 2
+def normalize(y, m, d):
+    return "%04d/%02d/%02d" % (y, m, d)
 
-S = input()
-while True:
-    y, m, d = map(int, S.split("/"))
-    s = "%04d/%02d/%02d" % (y, m, d)
+def is_good(y, m, d):
+    return len(set(normalize(y, m, d))) <= 3 # /を含む
 
-    if is_good(s):
-        print(s)
-        break
+y, m, d = map(int, input().split("/"))
 
-    ny, nm, nd = next_day(y, m, d)
-    S = "%04d/%02d/%02d" % (ny, nm, nd)
+while not is_good(y, m, d):
+    y, m, d = nextday(y, m, d)
+
+print(normalize(y, m, d))

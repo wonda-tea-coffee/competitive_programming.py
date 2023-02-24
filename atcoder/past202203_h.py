@@ -1,6 +1,4 @@
 import sys
-from collections import deque
-
 input = lambda: sys.stdin.readline().rstrip()
 
 class UnionFind:
@@ -9,6 +7,9 @@ class UnionFind:
         # 正の数の場合は親のインデックス
         # 負の数の場合は木のサイズ
         self.parent_or_size = [-1] * n
+        self.group = []
+        for i in range(n):
+            self.group.append([i])
 
     def merge(self, a, b):
         x = self.leader(a)
@@ -18,6 +19,8 @@ class UnionFind:
         if -self.parent_or_size[x] < -self.parent_or_size[y]:
             x, y = y, x
         self.parent_or_size[x] += self.parent_or_size[y]
+        self.group[x] += self.group[y]
+        self.group[y] = []
         self.parent_or_size[y] = x
 
         return x
@@ -32,26 +35,22 @@ class UnionFind:
         self.parent_or_size[a] = self.leader(self.parent_or_size[a])
         return self.parent_or_size[a]
 
-N, Q = map(int, input().split())
-uf = UnionFind(N)
-G = [[] for _ in range(N)]
-for _ in range(Q):
-    query = tuple(map(lambda x: int(x)-1, input().split()))
+    def connected_component(self, a):
+        return sorted(self.group[self.leader(a)])
 
-    if query[0] == 0:
-        t, u, v = query
+
+N, Q = map(int, input().split())
+uf = UnionFind(N+1)
+res = []
+for _ in range(Q):
+    t, *q = map(int, input().split())
+
+    if t == 1:
+        u, v = q
         if not uf.same(u, v):
             uf.merge(u, v)
-            G[u].append(v)
-            G[v].append(u)
     else:
-        t, u = query
-        que = deque([(u, -1)])
-        res = [u]
-        while que:
-            cur, pre = que.popleft()
-            for gi in G[cur]:
-                if gi == pre: continue
-                que.append((gi, cur))
-                res.append(gi)
-        print(*sorted(map(lambda x: x+1, res)))
+        u = q[0]
+        print(*uf.connected_component(u))
+
+# print("\n".join(map(str, res)))
