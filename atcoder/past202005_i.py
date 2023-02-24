@@ -1,32 +1,34 @@
+import sys
+input = lambda: sys.stdin.readline().rstrip()
+
 N = int(input())
+line = list(range(N))
+column = list(range(N))
+
 Q = int(input())
-
-row = list(range(N))
-col = list(range(N))
+transpose = False
 ans = []
-
-flag = False
-for i in range(Q):
-    q = list(map(int, input().split()))
-
-    t = q[0]
-    if t != 3:
-        A, B = q[1], q[2]
-        A -= 1
-        B -= 1
-
-    if t == 1:
-        row[A], row[B] = row[B], row[A]
-    elif t == 2:
-        col[A], col[B] = col[B], col[A]
-    elif t == 3:
-        row, col = col, row
-        flag = not flag
+for _ in range(Q):
+    t, *q = map(int, input().split())
+    if t == 3:
+        transpose = not transpose
     else:
-        if flag:
-            ans.append(N*col[B] + row[A])
-        else:
-            ans.append(N*row[A] + col[B])
+        A, B = map(lambda x: int(x)-1, q)
 
-for a in ans:
-    print(a)
+        if t == 1:
+            if transpose:
+                column[A], column[B] = column[B], column[A]
+            else:
+                line[A], line[B] = line[B], line[A]
+        elif t == 2:
+            if transpose:
+                line[A], line[B] = line[B], line[A]
+            else:
+                column[A], column[B] = column[B], column[A]
+        else:
+            if transpose:
+                ans.append(N*line[B]+column[A])
+            else:
+                ans.append(N*line[A]+column[B])
+
+print("\n".join(map(str, ans)))
