@@ -1,41 +1,30 @@
-import string
-import sys
-sys.setrecursionlimit(1000000)
+from collections import deque, defaultdict
 
 N = int(input())
-ab = set()
-for i in range(N):
+d = defaultdict(list)
+for _ in range(N):
     a, b = input().split()
-    ab.add((a, b))
-
+    d[a].append(b)
+    d[b].append(a)
 S = input()
 T = input()
 
-def is_similar(u, v):
-    return (u, v) in ab or (v, u) in ab
+def bfs(s, t):
+    Q = deque([s])
+    done = set([s])
 
-done = set()
-def dfs(s, i):
-    done.add((s, i))
+    while Q:
+        cur = Q.popleft()
+        if cur == t: return True
 
-    if len(S) == i:
-        return True
-    if s[i] == T[i]:
-        return dfs(s, i+1)
-    for c in list(string.ascii_lowercase):
-        if not is_similar(s[i], c):
-            continue
-        ta = list(s)
-        ta[i] = c
-        t = ''.join(ta)
-        if (t, i) in done:
-            continue
-        done.add((t, i))
-        if dfs(t, i):
-            return True
+        for to in d[cur]:
+            if to in done: continue
+            Q.append(to)
+            done.add(to)
+
     return False
 
-if dfs(S, 0):
+if all(bfs(S[i], T[i]) for i in range(len(S))):
     print("Yes")
 else:
     print("No")
