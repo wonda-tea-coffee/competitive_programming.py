@@ -6,7 +6,7 @@ INF = 10**100
 cost = [[INF]*(N+1) for _ in range(N+1)]
 cost[0][0] = 0
 
-for i in range(1, N):
+for i in range(1, N+1):
     for j in range(i):
         if S[i] == "(":
             # そのまま使う
@@ -23,4 +23,4 @@ for i in range(1, N):
         # 削除する
         cost[i][j] = min(cost[i][j], cost[i-1][j] + D[i])
 
-print(cost[N][0])
+print(cost[-1][0])
