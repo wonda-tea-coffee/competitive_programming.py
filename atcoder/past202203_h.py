@@ -1,3 +1,4 @@
+from collections import deque
 import sys
 input = lambda: sys.stdin.readline().rstrip()
 
@@ -7,9 +8,6 @@ class UnionFind:
         # 正の数の場合は親のインデックス
         # 負の数の場合は木のサイズ
         self.parent_or_size = [-1] * n
-        self.group = []
-        for i in range(n):
-            self.group.append([i])
 
     def merge(self, a, b):
         x = self.leader(a)
@@ -19,8 +17,6 @@ class UnionFind:
         if -self.parent_or_size[x] < -self.parent_or_size[y]:
             x, y = y, x
         self.parent_or_size[x] += self.parent_or_size[y]
-        self.group[x] += self.group[y]
-        self.group[y] = []
         self.parent_or_size[y] = x
 
         return x
@@ -35,22 +31,27 @@ class UnionFind:
         self.parent_or_size[a] = self.leader(self.parent_or_size[a])
         return self.parent_or_size[a]
 
-    def connected_component(self, a):
-        return sorted(self.group[self.leader(a)])
-
-
 N, Q = map(int, input().split())
-uf = UnionFind(N+1)
-res = []
-for _ in range(Q):
-    t, *q = map(int, input().split())
+E = [[] for _ in range(N)]
+uf = UnionFind(N)
 
-    if t == 1:
+for _ in range(Q):
+    t, *q = map(lambda x: int(x)-1, input().split())
+    if t == 0:
         u, v = q
         if not uf.same(u, v):
             uf.merge(u, v)
+            E[u].append(v)
+            E[v].append(u)
     else:
-        u = q[0]
-        print(*uf.connected_component(u))
+        visited = [False]*N
+        res = []
+        Q = deque([(q[0], -1)])
+        while Q:
+            cur, pre = Q.popleft()
+            res.append(cur)
 
-# print("\n".join(map(str, res)))
+            for to in E[cur]:
+                if to == pre: continue
+                Q.append((to, cur))
+        print(*map(lambda x: x+1, sorted(res)))
