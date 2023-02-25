@@ -44,14 +44,13 @@ for _ in range(Q):
             E[u].append(v)
             E[v].append(u)
     else:
-        visited = [False]*N
         res = []
-        Q = deque([(q[0], -1)])
-        while Q:
-            cur, pre = Q.popleft()
+        que = deque([(q[0], -1)])
+        while que:
+            cur, pre = que.popleft()
             res.append(cur)
 
             for to in E[cur]:
                 if to == pre: continue
-                Q.append((to, cur))
+                que.append((to, cur))
         print(*map(lambda x: x+1, sorted(res)))
