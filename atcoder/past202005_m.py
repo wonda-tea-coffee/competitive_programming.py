@@ -10,34 +10,39 @@ s = int(input())-1
 K = int(input())
 t = list(map(lambda x: int(x)-1, input().split())) + [s]
 
-min_dist = []
+INF = 10**100
+dist = []
+# 街t1,t2,...tKと街sを始点とした各街への最短経路を求める
+# O(K*log(N+M))
 for ti in t:
-    Q = deque([ti])
-    INF = 10**100
-    dist = [INF]*N
-    dist[ti] = 0
-    while Q:
-        cur = Q.popleft()
-        for to in E[cur]:
-            if dist[to] != INF: continue
-            dist[to] = dist[cur] + 1
-            Q.append(to)
+    dist_i = [INF]*N
+    dist_i[ti] = 0
+    que = deque([(0, ti)])
+
+    while que:
+        d, u = que.popleft()
+        for v in E[u]:
+            if dist_i[v] > d + 1:
+                dist_i[v] = d + 1
+                que.append((dist_i[v], v))
+
     res = []
     for tj in t:
-        res.append(dist[tj])
-    min_dist.append(res)
+        res.append(dist_i[tj])
+    dist.append(res)
 
 ALL = 1<<K
-dp = [[INF]*K for _ in range(ALL)]
+cost = [[INF]*K for _ in range(ALL)]
+cost[0][0] = 0
 for i in range(K):
-    dp[1<<i][i] = min_dist[K][i]
+    cost[1<<i][i] = dist[K][i]
 
 for bit in range(ALL):
     for i in range(K):
+        if (bit>>i)&1 == 0: continue
         for j in range(K):
-            if (bit>>j)&1 == 1 or i == j: continue
-
+            if (bit>>j)&1 == 1: continue
             to = bit | (1<<j)
-            dp[to][j] = min(dp[to][j], dp[bit][i] + min_dist[i][j])
+            cost[to][j] = min(cost[to][j], cost[bit][i] + dist[i][j])
 
-print(min(dp[-1]))
+print(min(cost[-1]))
