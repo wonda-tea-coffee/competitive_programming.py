@@ -15,16 +15,16 @@ for _ in range(Q):
             E[v].add(u)
     else:
         que = deque([u])
-        seen = [False]*N
+        seen = set()
         res = False
         while que:
             cur = que.popleft()
             if cur == v:
                 res = True
-            if seen[cur]: continue
-            seen[cur] = True
+            if cur in seen: continue
+            seen.add(cur)
             for to in E[cur]:
-                if seen[to]: continue
+                if to in seen: continue
                 que.append(to)
         if res:
             print("Yes")
