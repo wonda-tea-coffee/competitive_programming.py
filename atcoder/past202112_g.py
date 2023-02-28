@@ -21,6 +21,7 @@ for _ in range(Q):
             cur = que.popleft()
             if cur == v:
                 res = True
+                break
             if cur in seen: continue
             seen.add(cur)
             for to in E[cur]:
