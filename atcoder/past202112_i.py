@@ -2,31 +2,35 @@ import heapq
 from collections import defaultdict
 
 N, M = map(int, input().split())
-edges = defaultdict(lambda: [])
-B = set([1, N])
+v = [0, N-1]
+edges = defaultdict(list)
 for _ in range(M):
     a, b, c = map(int, input().split())
-    edges[a].append((c, b))
-    edges[b].append((c, a))
-    B.add(a)
-    B.add(b)
-B = sorted(B)
-# エレベーター間の辺（階段）を用意
-for i in range(len(B)-1):
-    d = B[i+1] - B[i]
-    edges[B[i+1]].append((d, B[i]))
-    edges[B[i]].append((d, B[i+1]))
+    a, b = a-1, b-1
+    edges[a].append((b, c))
+    edges[b].append((a, c))
+    v.append(a)
+    v.append(b)
+v.sort()
+for i in range(len(v)-1):
+    v1 = v[i]
+    v2 = v[i+1]
+    edges[v1].append((v2, abs(v2-v1)))
+    edges[v2].append((v1, abs(v1-v2)))
 
-Q = [(0, 1)]
+que = [(0, 0)]
+heapq.heapify(que)
 done = set()
-while Q:
-    c0, u = heapq.heappop(Q)
 
-    if u in done: continue
-    done.add(u)
+while que:
+    cost, cur = heapq.heappop(que)
 
-    if u == N: exit(print(c0))
+    if cur == N-1:
+        print(cost)
+        exit()
+    if cur in done: continue
+    done.add(cur)
 
-    for c1, v in edges[u]:
-        if v in done: continue
-        heapq.heappush(Q, (c0+c1, v))
+    for to, ncost in edges[cur]:
+        if to in done: continue
+        heapq.heappush(que, (ncost+cost, to))

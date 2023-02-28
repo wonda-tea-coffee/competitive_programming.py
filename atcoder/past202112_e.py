@@ -1,21 +1,12 @@
-import sys
-input = lambda: sys.stdin.readline().rstrip()
-
-h = {}
-for i in range(1, 6):
-    h[str(i)] = 0
-for i in range(6, 11):
-    h[str(i%10)] = 1
-
-ans = 500
 N = input()
-
+ans = 500
+pre = N[0]
+hand = {"1":0,"2":0,"3":0,"4":0,"5":0, "6":1,"7":1,"8":1,"9":1,"0":1}
 for i in range(1, len(N)):
     if N[i-1] == N[i]:
         ans += 301
-    elif h[N[i-1]] == h[N[i]]:
+    elif hand[N[i-1]] == hand[N[i]]:
         ans += 210
     else:
         ans += 100
-
 print(ans)

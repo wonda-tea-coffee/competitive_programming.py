@@ -1,13 +1,12 @@
-import sys
-input = lambda: sys.stdin.readline().rstrip()
-
 N = int(input())
-ans = {}
+ans = [-1]*6
 for i in range(1, N+1):
     p, v = input().split()
+    if v == "WA": continue
 
-    if v == "AC" and not p in ans:
-        ans[p] = i
+    n = ord(p)-65
+    if ans[n] == -1:
+        ans[n] = i
 
-for a in sorted(list(ans)):
-    print(ans[a])
+for a in ans:
+    print(a)
