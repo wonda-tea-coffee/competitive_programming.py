@@ -1,7 +1,7 @@
 N, W = map(int, input().split())
 w = [0]
 v = [0]
-for i in range(N):
+for _ in range(N):
     wi, vi = map(int, input().split())
     w.append(wi)
     v.append(vi)
