@@ -2,10 +2,13 @@ from math import *
 
 H, W, D = map(int, input().split())
 
-if D <= W/2:
-    if D <= H/2:
-        print(pi*D*D/(H*W))
-    else:
-        pass
+def f(x):
+    return 2*D*D*acos(x/(2*D)) - x*sqrt(D*D - (x/2)**2)
+
+if sqrt(H*H+W*W) <= 2*D:
+    print(1)
 else:
-    pass
+    ans = D*D*pi
+    if 2*D > H: ans -= f(H)
+    if 2*D > W: ans -= f(W)
+    print(ans/(H*W))
