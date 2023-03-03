@@ -1,28 +1,20 @@
 N = int(input())
 A = list(map(int, input().split()))
 B = list(map(int, input().split()))
-C = []
-for a, b in zip(A, B):
-    C.append(a-b)
-C.sort()
 
-r = N-1
-D = list(C)
-for i in range(N):
-    if D[i] >= 0: continue
-    while D[i] < 0:
-        if D[r] <= 0:
-            print(-1)
-            exit()
-        elif -D[i] <= D[r]:
-            D[r] += D[i]
-            D[i] = 0
-        else:
-            D[i] += D[r]
-            D[r] = 0
-            r -= 1
+C = [a-b for a, b in zip(A, B)]
+neg = list(filter(lambda x: x < 0, C))
+ans = len(neg)
+need = -sum(neg)
+pos = sorted(list(filter(lambda x: x > 0, C)))
+for p in pos[::-1]:
+    if need > 0:
+        need -= p
+        ans += 1
+    else:
+        break
 
-ans = 0
-for i in range(N):
-    if C[i] != D[i]: ans += 1
-print(ans)
+if need > 0:
+    print(-1)
+else:
+    print(ans)
