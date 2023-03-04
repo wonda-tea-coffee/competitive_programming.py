@@ -3,31 +3,22 @@ input = lambda: sys.stdin.readline().rstrip()
 from collections import deque
 
 N, M = map(int, input().split())
-E = [set() for _ in range(N+1)]
+E = [[] for _ in range(N)]
 for _ in range(M):
-    u, v = map(int, input().split())
-    if v in E[u]: continue
-    E[u].add(v)
-
-que = deque()
-for a in range(1, N+1):
-    for b in E[a]:
-        que.append((a, b))
-
-memo = [None]*(N+1)
-for a in range(1, N+1):
-    memo[a] = (set(range(1, N+1)) - {a} - E[a])
+    u, v = map(lambda x: int(x)-1, input().split())
+    E[u].append(v)
 
 ans = 0
-added_edge = set()
-while que:
-    a, b = que.popleft()
-    c = E[b] & memo[a]
-    for ci in c:
-        if (a, ci) in added_edge: continue
-        added_edge.add((a, ci))
-        ans += 1
-        E[a].add(ci)
-        que.append((a, ci))
-
+for i in range(N):
+    done = [False]*N
+    que = deque([(i, 0)])
+    while que:
+        cur, cost = que.popleft()
+        if done[cur]: continue
+        done[cur] = True
+        if cost >= 2:
+            ans += 1
+        for to in E[cur]:
+            if done[to]: continue
+            que.append((to, cost+1))
 print(ans)
