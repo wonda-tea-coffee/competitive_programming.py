@@ -1,26 +1,13 @@
+# 座標圧縮
 H, W, N = map(int, input().split())
-row = []
-col = []
+X, Y = [], []
 for i in range(N):
-    A, B = map(int, input().split())
-    row.append((A, i))
-    col.append((B, i))
+    x, y = map(int, input().split())
+    X.append(x)
+    Y.append(y)
 
-row.sort()
-col.sort()
-
-ansrow = [-1]*(N+1)
-anscol = [-1]*(N+1)
-idxrow = 1
-idxcol = 1
-for i in range(N):
-    if i > 0 and row[i][0] != row[i-1][0]:
-        idxrow += 1
-    if i > 0 and col[i][0] != col[i-1][0]:
-        idxcol += 1
-
-    ansrow[row[i][1]] = idxrow
-    anscol[col[i][1]] = idxcol
+Xdict = {x:i+1 for i, x in enumerate(sorted(list(set(X))))}
+Ydict = {y:i+1 for i, y in enumerate(sorted(list(set(Y))))}
 
 for i in range(N):
-    print(ansrow[i], anscol[i])
+    print(Xdict[X[i]], Ydict[Y[i]])
