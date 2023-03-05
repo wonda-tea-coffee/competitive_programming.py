@@ -1,0 +1,2 @@
+- https://atcoder.jp/contests/abc276/submissions/36265971
+    - 順列のK番目
