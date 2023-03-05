@@ -1,17 +1,15 @@
 N = int(input())
-h = {}
-for i in range(N):
-    l = list(map(int, list(input())))
-    for j in range(N):
-        if l[j] in h:
-            h[l[j]].append((i, j))
-        else:
-            h[l[j]] = [(i, j)]
-
-# N桁選ぶ
-for i in range(N):
-    # 大きい方から優先的に
-    for j in range(9, 0, -1):
-        if not j in h: continue
-        if len(h[j]) == 0: continue
-        
+A = [list(map(int, list(input()))) for _ in range(N)]
+ans = 0
+for y in range(N):
+    for x in range(N):
+        for dy, dx in [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]:
+            c = A[y][x]
+            ny = y
+            nx = x
+            for k in range(N-1):
+                ny = (ny+dy)%N
+                nx = (nx+dx)%N
+                c = c*10 + A[ny][nx]
+            ans = max(ans, c)
+print(ans)
