@@ -1,40 +1,24 @@
+import math
+
 N = int(input())
 a = list(map(int, input().split()))
 
-ans = 0
-min2 = 10**10
-min3 = 10**10
-cnt2 = [0]*N
-cnt3 = [0]*N
-for i in range(N):
-    t = a[i]
+def gcd(a):
+    ret = a[0]
+    for i in range(1, len(a)):
+        ret = math.gcd(ret, a[i])
+    return ret
 
-    c2 = 0
-    while t % 2 == 0:
-        t //= 2
-        c2 += 1
-    cnt2[i] = c2
-    min2 = min(min2, c2)
-
-    c3 = 0
-    while t % 3 == 0:
-        t //= 3
-        c3 += 1
-    cnt3[i] = c3
-    min3 = min(min3, c3)
-
+g = gcd(a)
 ans = 0
 for i in range(N):
-    while cnt2[i] > min2:
-        ans += 1
-        cnt2[i] -= 1
-        a[i] //= 2
-    while cnt3[i] > min3:
-        ans += 1
-        cnt3[i] -= 1
-        a[i] //= 3
+    a[i] //= g
+    for d in [2, 3]:
+        while a[i] % d == 0:
+            a[i] //= d
+            ans += 1
+    if a[i] != 1:
+        print(-1)
+        exit()
 
-if len(set(a)) == 1:
-    print(ans)
-else:
-    print(-1)
+print(ans)
