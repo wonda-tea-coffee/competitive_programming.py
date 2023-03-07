@@ -1,17 +1,5 @@
 import sys
-sys.setrecursionlimit(1000000)
 input = lambda: sys.stdin.readline().rstrip()
-
-def solve(n):
-    if remembered[n]: return 0
-
-    ret = 0
-    for ak in A[n]:
-        ret += solve(ak)
-
-    ret += T[n]
-    remembered[n] = True
-    return ret
 
 N = int(input())
 T = [-1]
@@ -19,7 +7,20 @@ A = [[]]
 for _ in range(N):
     t, _, *ai = map(int, input().split())
     T.append(t)
-    A.append(ai)
-remembered = [False]*(N+1)
+    A.append([-1] + ai)
 
-print(solve(N))
+needed = [False]*(N+1)
+needed[-1] = True
+
+for i in range(N, 0, -1):
+    if not needed[i]: continue
+
+    for aj in A[i]:
+        needed[aj] = True
+
+ans = 0
+for i in range(1, N+1):
+    if not needed[i]: continue
+    ans += T[i]
+
+print(ans)
